@@ -1,4 +1,3 @@
-const fs = require('fs');
 /*
     FORMATO DE CADA TAREA
         - titulo: string
@@ -7,22 +6,19 @@ const fs = require('fs');
            * pendiente
          )
 */
-const leerTareas = function () {
-    const list = fs.readFileSync("./tareas.json");
-    return JSON.parse(list);
+const fs = require('fs');
+const taskList = './tareas.json';
+
+exports.leerTareas = function () {
+    return JSON.parse(fs.readFileSync(taskList, 'utf-8'));
 }
 
-const agregarTarea = function (task) {
-    const tasks = leerTareas();
-    tasks.push(task);
-    const conv = JSON.stringify(tasks);
-    fs.writeFileSync("./tareas.json", conv);
+exports.agregarTarea = function (tarea) {
+    const listaTareas = exports.leerTareas();
+    listaTareas.push(tarea);
+    return fs.writeFileSync(taskList, JSON.stringify(listaTareas));
 }
 
-const filtrarTareasPorEstado = function (edo) {
-    return leerTareas().filter(({ status }) => status === edo);
-}
-
-module.exports = {
-    leerTareas, agregarTarea, filtrarTareasPorEstado
+exports.filtrarTareasPorEstado = function (estado) {
+   return exports.leerTareas().filter(({status}) => status === estado);
 }
